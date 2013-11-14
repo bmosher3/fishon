@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css" type="text/css" media="screen">
-    <title>fishOn</title>
-    <style>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<style>
         html,
         body,
         #map-canvas {
@@ -14,14 +12,14 @@
             margin: 0px;
             padding: 0px;
         }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+</style>
+<title>fishOn</title>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-
-    <script>
+<script>
         function initialize() {
             var mapOptions = {
                 center: new google.maps.LatLng(41.615442, -71.315231),
@@ -51,7 +49,7 @@
                 mistake '; ?>" type="text" maxlength="100" value="<?php echo $firstName; ?>" onfocus="this.select()"  tabindex="33"/> Inches</p>' +
                     '<p><b>Weight: </b><input id ="txtWeight" name="txtWeight" class="element text medium<?php if ($firstNameERROR) echo '
                 mistake '; ?>" type="text" maxlength="100" value="<?php echo $firstName; ?>" onfocus="this.select()"  tabindex="33"/> Pounds</p>' +
-                    '<p><input id ="submitButton" type = "button" value=Submit></input>' +
+                    '<p><input id ="submitButton" type = "button" value="Submit"></input>' +
                     '</form>' +
                     '</div>';
                 bindInfoWindow(marker, map, infoWindow, form);
@@ -67,9 +65,39 @@
                 infoWindow.open(map, marker);
             });
         }
-    </script>
+</script>
+<?php
+require("connect.php");
+
+$date = "";
+$time = "";
+$fish = "";
+$tide = "";
+$bait = "";
+$length = "";
+$weight = "";
+
+if (isset($_POST["submitButton"])) {
+	$bait = htmlentities($_POST["txtBait"], ENT_QUOTES, "UTF-8");
+	try {
+            $db->beginTransaction();
+
+            //$sql = 'INSERT into tblReport values(fkEmail, fldDate, fldTime, fldBait, fldTide, fldShore, fldDescription, fldLocationName, fldLat, fldLong) from tblStudent WHERE pkStudentusername ="'.$email.'"';
+            $sql = 'INSERT into tblReport (fkEmail, fldBait, fldLat, fldLong) VALUES (?, ?,?,?)';
+            $stmt = $db->prepare($sql);
+		    $stmt->execute(array("bmosher3@gmail.com",$bait,35,35));
+		    $dataEntered = $db->commit();
+	}
+	catch (PDOExecption $e) {
+   	        $db->rollback();
+            print "Error!: " . $e->getMessage() . "</br>";
+           }
+}
+?> 
+
 </head>
 
 <body>
+
     <div id="map-canvas"></div>
 </body>
