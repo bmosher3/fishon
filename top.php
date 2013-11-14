@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<title>Fish On</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 <meta charset="utf-8">
-<meta name="author" content="Ben Mosher">
-<meta name="description" content="User submitted fishing reports for Rhode Island.">
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<title>fishOn</title>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-<!--[if lt IE 9]>
-	<script src="//html5shim.googlecode.com/sin/trunk/html5.js"></script>
-<![endif]-->
-	
-<link rel="stylesheet"
-href="style.css"
-type="text/css"
-media="screen">
