@@ -1,5 +1,4 @@
  <?php
- ob_start();
 /* The purpose of this file to establish the connection between your php page
  * and the database. On successfull completion you will have a variable $db 
  * that is your database connection ready to use.

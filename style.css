@@ -18,3 +18,80 @@
     margin: 0px;
     padding: 0px;
         }
+.required {
+    font-weight:bolder;
+    font-style:italic;
+}
+#register{
+	float:right;
+	width:200px;
+	height:300px;
+}
+
+html {
+	margin: 0;
+	padding: 0;
+	}
+body { 
+	font: 75% georgia, sans-serif;
+	line-height: 1.88889;
+	background: #fff; 
+	margin: 36px auto; 
+	
+	}
+h1 { 
+	font: normal 1.4em georgia, sans-serif;
+	letter-spacing: 1px; 
+	margin-bottom: 0; 
+	color: #7D775C;
+	padding-left: 5.33333333%;
+	padding-right: 5.33333333%;
+    } 
+footer { 
+	clear: both;
+	font: normal 1.0em georgia, sans-serif;
+	letter-spacing: 1px; 
+	margin-bottom: 0; 
+	color: black;
+	border-top-right-radius:015px;
+    border-bottom-left-radius:015px;
+	padding-left: 5.33333333%;
+	padding-right: 5.33333333%;
+	padding-top: 5.33333333%;
+    } 
+ol {
+	padding-left: 7.6%;
+	color: red;
+} 
+p{
+	padding-left: 5.33333333%;
+	padding-right: 5.33333333%;
+}
+nav ol {
+    padding-left: 5.33333333%;  /* 48px / 900px */
+	}
+nav ol li{
+    display: inline;
+    list-style-type: none;
+    padding-right: 3em;
+	}
+td {
+	padding-left: 5.33333333%;
+	padding-right: 5.33333333%;
+	}
+form {
+	padding-left: 5.33333333%;
+	padding-right: 5.33333333%;
+	}
+label {
+    color: #555753;
+    font-weight: bold;
+    font-size: .9em; 
+    display: block;
+	}	
+label.list{
+	display: inline;
+	color: #555753;
+    font-weight: bold;
+    font-size: .9em; 
+    }

@@ -15,12 +15,14 @@
             padding: 0px;
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCtmGk6E6OiFCSxfX_afOJofOHMCTE_EA&sensor=false"></script>
+    <!link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
     <script>
+        google.maps.visualRefresh = true;
+
         function initialize() {
             var mapOptions = {
                 center: new google.maps.LatLng(41.615442, -71.315231),
@@ -46,7 +48,7 @@
 
 
                         for (var i = 0; i < response.length; i++) {
-                            var name = response[i]["fkEmail"];
+                            var email = response[i]["fkEmail"];
                             var date = response[i]["fldDate"];
                             var bait = response[i]["fldBait"];
                             var desc = response[i]["fldDescription"];
@@ -57,13 +59,31 @@
                             var point = new google.maps.LatLng(
                                 parseFloat(response[i]["fldLat"]),
                                 parseFloat(response[i]["fldLong"]));
-                            var contentString = '<p><b>Date:</b>' + date + '</p>' +
-                                '<p><b>Time:</b>' + time + '</p>' +
-                                '<p><b>Location:</b>' + loc + '</p>' +
-                                '<p><b>On/Off Shore:</b>' + shore + '</p>' +
-                                '<p><b>Bait:</b>' + bait + '</p>' +
-                                '<p><b>Description:</b>' + desc + '</p>' +
-                                '<p><b>Tide:</b>' + tide + '</p>';
+
+
+                            var contentString = '<p><b>Report</b></p>';
+                                if (date){
+                                    contentString += '<p><b>Date:</b>' + date + '</p>' ;
+                                }
+                                if (time){
+                                    contentString += '<p><b>Time:</b>' + time + '</p>' ;
+                                }
+                                if (loc){
+                                    contentString += '<p><b>Location:</b>' + loc + '</p>' ;
+                                }
+                                if (shore){
+                                    contentString += '<p><b>On/Off Shore:</b>' + shore + '</p>' ;
+                                }
+                                if (bait){
+                                    contentString += '<p><b>Bait:</b>' + bait + '</p>' ;
+                                }
+                                if (desc){
+                                    contentString += '<p><b>Description:</b>' + desc + '</p>' ;
+                                }
+                                if (tide){
+                                    contentString += '<p><b>Tide:</b>' + tide + '</p>';  
+                                }
+                                                     
 
 
                             var infoWindow = new google.maps.InfoWindow;
