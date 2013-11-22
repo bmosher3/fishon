@@ -1,13 +1,10 @@
 <?php
-$debug = true;
+$debug = false;
 include('top.php');
 include('password.php');
 require('connect.php');
 ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script>
-</script>
+
 </head>
 <?
 
@@ -16,7 +13,7 @@ $pass = "";
 
 if (isset($_POST["btnSubmit"])) {
 	$email = htmlentities($_POST["email"], ENT_QUOTES, "UTF-8");
-	$pass = password_hash(htmlentities($_POST["email"], ENT_QUOTES, "UTF-8"), PASSWORD_DEFAULT);
+	$pass = password_hash(htmlentities($_POST["email"], ENT_QUOTES, "UTF-8"), PASSWORD_BCRYPT);
 
 	try {
 	            $db->beginTransaction();
@@ -40,17 +37,11 @@ if (isset($_POST["btnSubmit"])) {
 	    }
 }
 ?>
-<body><header>
-	<h1><b>Fish On</b></h1>
-</header>
-<nav>
-     <ol>
-		<li><a href="home.php">Home</a></li>
-        <li><a href="fishmap.php">Fish Map</a></li>	
-        <li><a href="popmap.php">Submit Report</a></li>	
-     </ol>
-</nav>
+
 <body>
+		<?
+		include('nav.php');
+		?>
  		<form action="<? print $_SERVER['PHP_SELF']; ?>"
                   method="post"
                   id="register">
