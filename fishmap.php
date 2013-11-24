@@ -60,28 +60,29 @@ include('top.php');
                                 parseFloat(response[i]["fldLong"]));
 
 
-                            var contentString = '<p><b>Report</b></p>';
+                            var contentString ='<div id="report" style="width:250px; height:300px">' + '<h1>Report:</h1>';
                                 if (date){
-                                    contentString += '<p><b>Date:</b>' + date + '</p>' ;
+                                    contentString += '<p><b>Date: </b>' + date + '</p>' ;
                                 }
                                 if (time){
-                                    contentString += '<p><b>Time:</b>' + time + '</p>' ;
+                                    contentString += '<p><b>Time: </b>' + time + '</p>' ;
                                 }
                                 if (loc){
-                                    contentString += '<p><b>Location:</b>' + loc + '</p>' ;
+                                    contentString += '<p><b>Location: </b>' + loc + '</p>' ;
                                 }
                                 if (shore){
-                                    contentString += '<p><b>On/Off Shore:</b>' + shore + '</p>' ;
+                                    contentString += '<p><b>Shore: </b>' + shore + '</p>' ;
                                 }
                                 if (bait){
-                                    contentString += '<p><b>Bait:</b>' + bait + '</p>' ;
+                                    contentString += '<p><b>Bait: </b>' + bait + '</p>' ;
                                 }
                                 if (desc){
-                                    contentString += '<p><b>Description:</b>' + desc + '</p>' ;
+                                    contentString += '<p><b>Description: </b>' + desc + '</p>' ;
                                 }
                                 if (tide){
-                                    contentString += '<p><b>Tide:</b>' + tide + '</p>';  
+                                    contentString += '<p><b>Tide: </b>' + tide + '</p>';  
                                 }
+                                contentString += '</div>'
                                                      
 
 
