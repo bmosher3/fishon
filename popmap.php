@@ -1,19 +1,29 @@
 <?php
 include('top.php');
+require('connect.php');
 ?>
 <style>
-        html,
-        body,
         #map-canvas {
-            height: 100%;
-            margin: 0px;
+            height: 90%;
+            width: 92%;
             padding: 0%;
+            margin: 0 auto 0 auto; 
         }
 </style>
 <title>fishOn</title>
 <script src="jquery-ui-timepicker-addon.js"></script>
+<?
+  $sql  = 'SELECT pkFishID, fldFishSpecies FROM tblFish ORDER BY fldFishSpecies';
+  $stmt = $db->prepare($sql);
+  $stmt->execute(); 
+  $fish = $stmt->fetchAll();
+  if (($_SESSION['user'])&&($_SESSION['approved'])&&($_SESSION['confirmed'])) { 
+  ?>
 
 <script>
+    
+        var fishes = (<?php echo json_encode($fish) ?>);
+        console.log(fishes);
         google.maps.visualRefresh = true;
         var marker;
 
@@ -34,13 +44,19 @@ include('top.php');
                     map: map
                 });
 
-                var form = '<div id="report">' +
+                var form = '<div id="report" style="width:325px; height:380px">' +
                     '<h1 id="firstHeading" class="firstHeading">Add Report</h1>' +
                     '<form id="reportForm">' +
-                    '<p><b>Email:  </b><input type="text" id ="email" name="email"  maxlength="100"  onfocus="this.select()"  tabindex="33"/>' +
                     '<p><b>Date:   </b><input type="text" id="datepicker"></p>' +
                     '<p><b>Time:   </b><input type="text" id="timepicker"</p>' +
-                    '<p><b>Fish:   </b><select id ="fish"><option>Striper</option><option>Fluke</option></select></p>' +
+                    '<p><b>Fish:   </b><select id ="fish">';
+                    for (key in fishes){
+                      var fish = window.fishes[key]["fldFishSpecies"];
+                      var fishID = window.fishes[key]["pkFishID"];
+                      form+= "<option value =" + fishID+">"+fish+"</option>";
+
+                    }
+                    form+= '</select></p>' +
                     '<p><b>Tide:   </b><select id ="tide"><option>Incoming</option><option>Outgoing</option></select></p>' +
                     '<p><b>Shore:  </b><select id ="shore"><option>On Shore</option><option>Off Shore</option></select></p>' +
                     '<p><b>Bait:   </b><input type="text"  id ="bait" name="bait" size="10" maxlength="20" value="" onfocus="this.select()"  tabindex="33"/>' +
@@ -76,10 +92,11 @@ include('top.php');
         }
 
         function saveData() {
-              var email = escape(document.getElementById("email").value);
+              var email = "<?php echo $_SESSION['user']?>";
               var date = escape(document.getElementById("datepicker").value);
               var time = escape(document.getElementById("timepicker").value);
-              var fish = escape(document.getElementById("fish").value);
+              var fish = escape(document.getElementById("fish").text);
+              var fishID = escape(document.getElementById("fish").value);
               var tide = escape(document.getElementById("tide").value);
               var shore = escape(document.getElementById("shore").value);
               var bait = escape(document.getElementById("bait").value);
@@ -88,14 +105,15 @@ include('top.php');
               var latlng = marker.getPosition();
          
               var url = "insert.php?email=" + email + "&lat=" + latlng.lat() + "&lng=" + latlng.lng() + 
-                        "&date=" + date + "&time=" + time  + "&fish=" +fish + "&tide=" + tide + "&shore=" + shore +
+                        "&date=" + date + "&time=" + time  + "&fishID=" +fishID + "&tide=" + tide + "&shore=" + shore +
                         "&bait=" + bait  + "&length=" + length + "&weight=" + weight ;
               downloadUrl(url, function(data, responseCode) {
                 if (responseCode == 200 && data.length <= 1) {
-                  infowindow.close();
-                  document.getElementById("message").innerHTML = "Location added.";
+                   document.getElementById("message").innerHTML = "Location added.";
                 }
               });
+              successContent = "<h1>Report Submitted</h1><p>You can now view your report on the Fish Map page."
+              document.getElementById("report").innerHTML = successContent;
             }
 
             function downloadUrl(url, callback) {
@@ -109,13 +127,12 @@ include('top.php');
                   callback(request.responseText, request.status);
                 }
               };
-
               request.open('GET', url, true);
               request.send(null);
             }
 
             function doNothing() {}
-            
+    
 </script>
 </head>
 
@@ -123,6 +140,12 @@ include('top.php');
     <?
     include('nav.php');
     ?>
+    <?php }
+    else{
+      echo("<h1>You must be logged in and confirm your email to view this page</h1>");
+    } ?> 
+    
     <div id="map-canvas"></div>
     <div id="message"></div>
+    
 </body>

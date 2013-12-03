@@ -5,7 +5,7 @@ require("connect.php");
 $email = $_GET['email'];
 $date = $_GET['date'];
 $time = $_GET['time'];
-$fish = $_GET['fish'];
+$fishID = $_GET['fishID'];
 $tide = $_GET['tide'];
 $shore = $_GET['shore'];
 $bait = $_GET['bait'];
@@ -25,6 +25,14 @@ try {
              " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $db->prepare($query);
     $stmt->execute(array($email,$date,$time,$tide,$shore,$bait,$lat,$lng));
+    $reportID = $db->lastInsertId();
+
+    $query = "INSERT INTO tblReportFish " .
+             " (fkReportID, fkFishID, fldFishLength, fldFishWeight) " .
+             " VALUES (?, ?, ?, ?)";
+    $stmt = $db->prepare($query);
+    $stmt->execute(array($reportID,$fishID,$length,$weight));
+
     $dataEntered = $db->commit();
     } 
 catch (PDOExecption $e) {

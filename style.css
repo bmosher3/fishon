@@ -4,11 +4,11 @@
 	width: 300px;
 	height: 300px;
 }
-#map-canvas {
-    height: 100%;
-    margin: 0px;
-    padding: 1.5%;
-        }
+#outside{
+	float:center;
+	height: 50%;
+    width: 70%;
+}
 .required {
     font-weight:bolder;
     font-style:italic;
@@ -21,11 +21,18 @@
 	position: relative;
     z-index: 999;
 }
+#changepass{
+	float:center;
+	padding-top: 50px;
+}
 #register{
 	float:right;
 	width:200px;
 	height:300px;
 	padding-top: 50px;
+}
+#error{
+	color: red;
 }
 
 html {
@@ -33,13 +40,14 @@ html {
 	margin: 0px;
 	padding: 0px;
 	height:100%;
+	background: #95B9C7;
 	}
 body { 
 	font: 100%
 	line-height: 1.88889;
 	background: #fff; 
 	margin: 0px ;
-	padding: 0px; 
+	padding: 0;
 	height: 100%;
 	
 	}

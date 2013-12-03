@@ -13,14 +13,19 @@ return $xmlStr;
 } 
 */
 // Select all the rows in the markers table
-$sql = "SELECT fkEmail, fldDate, fldTime, fldBait, fldTide, fldShore, fldDescription, fldLocationName, fldLat, fldLong FROM tblReport";
+$sql = "SELECT tblReport.pkReportID, tblReport.fkEmail, tblReport.fldDate, tblReport.fldTime, tblReport.fldBait, tblReport.fldTide, tblReport.fldShore,";
+$sql.= "tblReport.fldDescription, tblReport.fldLocationName, tblReport.fldLat, tblReport.fldLong, tblReportFish.fkReportID, tblReportFish.fkFishID,";
+$sql.= "tblReportFish.fldFishLength, tblReportFish.fldFishWeight, tblFish.fldFishSpecies FROM tblReport INNER JOIN tblReportFish";
+$sql.=" ON pkReportID = fkReportID";
+$sql.= " INNER JOIN tblFish ON tblReportFish.fkFishID = tblFish.pkFishID ";
+
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//print_r($result);
 
 if (!$result) {
   die('Invalid query: ' . mysql_error());
 }
 echo json_encode($result);
+
 ?>
