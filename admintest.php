@@ -8,23 +8,28 @@ if($_SESSION['admin']){
             $sql  = 'SELECT pkEmail';
             $sql .= ' FROM tblUser';
             $sql .= ' ORDER BY pkEmail';
-
             $stmt = $db->prepare($sql);
-            
             $stmt->execute(); 
-
             $users = $stmt->fetchAll(); 
 
             $sql  = 'SELECT pkReportID, fkEmail';
             $sql .= ' FROM tblReport';
             $sql .= ' ORDER BY pkReportID';
-
-            $stmt = $db->prepare($sql);
-            
+            $stmt = $db->prepare($sql);           
             $stmt->execute(); 
-
             $reports = $stmt->fetchAll(); 
 
+            $sql  = 'SELECT pkFishID, fldFishSpecies';
+            $sql .= ' FROM tblFish';
+            $sql .= ' ORDER BY fldFishSpecies';
+            $stmt = $db->prepare($sql);          
+            $stmt->execute(); 
+            $fishes = $stmt->fetchAll(); 
+?>
+<script>
+var fishes = (<?php echo json_encode($fishes) ?>);
+</script>
+<?
 
 if (isset($_POST["user_submit"])) {
         
@@ -66,7 +71,7 @@ if (isset($_POST["user_submit"])) {
     //-----------------------------------------------------------------------------
     //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
     // simple deleting record. 
-    if (isset($_POST["delete"])) {
+    if (isset($_POST["delete_user"])) {
     //-----------------------------------------------------------------------------
     // 
     // Checking to see if the form's been submitted. if not we just skip this whole 
@@ -98,7 +103,7 @@ if (isset($_POST["user_submit"])) {
     //-----------------------------------------------------------------------------
     //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
     // if form has been submitted, validate the information both add and update
-    if (isset($_POST["update"])) {    
+    if (isset($_POST["update_user"])) {    
         // initialize my variables to the forms posting 
         $email = htmlentities($_POST["email"], ENT_QUOTES);
         $confirmed = htmlentities($_POST["confirmed"], ENT_QUOTES);
@@ -111,7 +116,7 @@ if (isset($_POST["user_submit"])) {
             if ($debug)
                 echo "<p>Form is valid</p>";
 
-            if (isset($_POST["update"])) { // update record
+            if (isset($_POST["update_user"])) { // update record
                 $sql = 'UPDATE tblUser SET pkEmail ="'.$email.'", fldConfirmed ="'.$confirmed.'", fldApproved ="' .$approved . '", fldAdmin ="' .$admin .'" WHERE pkEmail = "'.$email.'"'; 
             } else { // insert record
                 $sql = "INSERT INTO ";
@@ -143,44 +148,73 @@ if (isset($_POST["user_submit"])) {
         // end no errors    
     } // end isset cmdSubmitted
      
-
-    if ($email != "") {
-        print "<h1>Edit User Information</h1>";
-        //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
-        // display a delete option
-        ?>
+if (isset($_POST["report_submit"])) {
         
-        <?
-        //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
-    } else {
-        print "<h1>Add User Information</h1>";
-    }
+
+        // you may want to add another security check to make sure the person
+        // is allowed to delete records.
+        
+        $rep_ID = htmlentities($_POST["lstReport"], ENT_QUOTES);
+
+        $sql = "SELECT tblReport.pkReportID, tblReport.fkEmail, tblReport.fldDate, tblReport.fldTime, tblReport.fldBait, tblReport.fldTide, tblReport.fldShore,";
+        $sql.= "tblReport.fldDescription, tblReport.fldLocationName, tblReport.fldLat, tblReport.fldLong, tblReportFish.fkReportID, tblReportFish.fkFishID,";
+        $sql.= "tblReportFish.fldFishLength, tblReportFish.fldFishWeight, tblFish.fldFishSpecies FROM tblReport INNER JOIN tblReportFish";
+        $sql.=" ON pkReportID = fkReportID";
+        $sql.= " INNER JOIN tblFish ON tblReportFish.fkFishID = tblFish.pkFishID WHERE tblReport.pkReportID ='".$rep_ID."'";
+
+            print "<p>sql " . $sql;
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute();
+
+        $this_reports = $stmt->fetchAll();
+        print_r($this_reports);
+        foreach ($this_reports as $this_report){
+            $rep_email = $this_report["fkEmail"];
+            $rep_ID = $this_report["pkReportID"];
+            $rep_date = $this_report["fldDate"];
+            $rep_time = $this_report["fldTime"];
+            $rep_bait = $this_report["fldBait"];
+            $rep_tide = $this_report["fldTide"];
+            $rep_shore = $this_report["fldShore"];           
+            $rep_fish = $this_report["fldFishSpecies"];
+            $rep_fishID = $this_report["fkFishID"];
+            $rep_length = $this_report["fldFishLength"];
+            $rep_weight = $this_report["fldFishWeight"];
+
+        }
+    } else { //defualt values
+
+        $uid = "";
+        $ufirstName = "";
+        $ulastName = "";
+        $ubirthday = "";
+
+
+    } // end isset  Users
+    
 
 
     ?>
 
     <form action="<? print $_SERVER['PHP_SELF']; ?>" method="post">
         <fieldset>
-            <label for="email">Email*</label><br>
-            <input name="del_email" type="text" size="20" id="del_email" <? print 'value="'.$email.'"'; ?>/><br>
+        <h1>User Information</h1>
+            <label for="email">Email*</label>
+            <input name="email" type="text" size="20" id="email" <? print 'value="'.$email.'"'; ?>/><br>
 
-            <label for="confirmed">Confirmed*</label><br>
+            <label for="confirmed">Confirmed</label>
             <input name="confirmed" type="text" size="20" id="confirmed" <? print 'value="' . $confirmed . '"'; ?>/><br>
 
-            <label for="approved">Approved</label><br>
+            <label for="approved">Approved</label>
             <input name="approved" type="text" size="20" id="approved" <? print 'value="'. $approved.'"'; ?> /><br>
 
-            <label for="admin">Confirmed</label><br>
+            <label for="admin">Admin</label>
             <input name="admin" type="text" size="20" id="admin" <? print 'value="' . $admin . '"'; ?>/><br>
 
-            <?
-    //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
-    // if there is a record then we need to be able to pass the pk back to the page
-            if ($email != "")
-                print '<input name= "email" type="hidden" id="email" value="' . $email . '"/>';
-            ?>
-            <input type="submit" name="update" value="update" />
-            <input type="submit" name="delete" value="delete" />
+            <input type="submit" name="update_user" value="update" />
+            <input type="submit" name="delete_user" value="delete" />
         </fieldset>     
     </form>
    
@@ -231,10 +265,37 @@ elseif ($_SESSION['user']){
 </fieldset>
 </form>
 
+<form action="<? print $_SERVER['PHP_SELF']; ?>"
+                      method="post"
+                      id="report_select">
 <fieldset class="listbox"><legend>Report</legend>
         <select name="lstReport" size="1" tabindex="243">';
                     <?php foreach ($reports as $report) {
                     print '<option value=' . $report['pkReportID'] . '>'.$report['fkEmail']. " " . $report['pkReportID'].'</option>';
                     }?>
         </select>
+        <input type="submit" id="report_submit" name="report_submit" value="Submit" tabindex="502" class="button">
 </fieldset>
+<form>
+
+<form action="<? print $_SERVER['PHP_SELF']; ?>" method="post">
+        <fieldset>
+                    <h1 id="firstHeading" class="firstHeading">Report</h1>
+                    <form id="reportForm">
+                    <b>User:   </b><input type="text" <? print 'value="'.$rep_email.'"'; ?>/><br>
+                    <b>Date:   </b><input type="text" id="datepicker" <? print 'value="'.$rep_date.'"'; ?>/><br>
+                    <b>Time:   </b><input type="text" id="timepicker"<? print 'value="'.$rep_time.'"'; ?>/><br>
+                    <b>Fish:   </b><select id ="fish"><? print '<option value=' . $rep_fishID. '>'.$rep_fish. '</option>'; ?>/>
+                    <?php foreach ($fishes as $fish) {
+                    print '<option value=' . $fish['pkFishID'] . '>'.$fish['fldFishSpecies']. '</option>';
+                    }?>
+                    </select><br>
+                    <b>Tide:   </b><select id ="tide"><option>Incoming</option><option>Outgoing</option></select><br>
+                    <b>Shore:  </b><select id ="shore"><option>On Shore</option><option>Off Shore</option></select><br>
+                    <b>Bait:   </b><input type="text"  id ="bait" name="bait" size="10" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_bait.'"'; ?>/><br>
+                    <b>Length: </b><input type="text" id ="length" name="txtLength" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_length.'"'; ?>/> Inches<br>
+                    <b>Weight: </b><input type="text"  id ="weight" name="txtWeight" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33"<? print 'value="'.$rep_weight.'"'; ?>/> Pounds<br>
+                    <input type="button" value="Save & Close" onclick="saveData()"/>
+                    </form> 
+        </fieldset>
+</form>
