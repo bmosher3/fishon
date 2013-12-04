@@ -149,7 +149,11 @@ if (isset($_POST["user_submit"])) {
     } // end isset cmdSubmitted
      
 if (isset($_POST["report_submit"])) {
-        
+        $email = htmlentities($_POST["email"], ENT_QUOTES);
+        $confirmed = htmlentities($_POST["confirmed"], ENT_QUOTES);
+        $approved = htmlentities($_POST["approved"], ENT_QUOTES);
+        $admin = htmlentities($_POST["admin"], ENT_QUOTES);
+
 
         // you may want to add another security check to make sure the person
         // is allowed to delete records.
@@ -184,17 +188,31 @@ if (isset($_POST["report_submit"])) {
             $rep_weight = $this_report["fldFishWeight"];
 
         }
-    } else { //defualt values
+} 
+if (isset($_POST["update_report"])) {
+        $rep_email = htmlentities($_POST["rep_email"], ENT_QUOTES);
+        $rep_ID = htmlentities($_POST["rep_id"], ENT_QUOTES);
+        $rep_date = htmlentities($_POST["datepicker"], ENT_QUOTES);
+        $rep_time = htmlentities($_POST["timepicker"], ENT_QUOTES);
+        $rep_bait = htmlentities($_POST["bait"], ENT_QUOTES);
+        $rep_tide = htmlentities($_POST["tide"], ENT_QUOTES);
+        $rep_shore = htmlentities($_POST["shore"], ENT_QUOTES);
+        $rep_fishID = htmlentities($_POST["fish"], ENT_QUOTES);
+        //$rep_fishID = htmlentities($_POST["time"], ENT_QUOTES);
+        $rep_length = htmlentities($_POST["length"], ENT_QUOTES);
+        $rep_weight = htmlentities($_POST["weight"], ENT_QUOTES);
 
-        $uid = "";
-        $ufirstName = "";
-        $ulastName = "";
-        $ubirthday = "";
+        $sql = 'UPDATE tblReport SET fldDate ="' .$rep_date. '", fldTime="' .$rep_time.'", fldBait ="' .$rep_bait.'", ';
+        $sql .= 'fldTide ="' .$rep_tide. '", fldShore ="' .$rep_shore . '" WHERE pkReportID ="' .$rep_ID.'"';
+        $stmt = $db->prepare($sql);
+        $enterData = $stmt->execute();
 
-
-    } // end isset  Users
-    
-
+        $sql = 'UPDATE tblReportFish SET fkFishID ="' .$rep_fishID. '", fldFishLength="' .$rep_length.'", fldFishWeight ="' .$rep_weight.'" ';
+        $sql .= 'WHERE fkReportID ="' .$rep_ID . '"';
+        print $sql;
+        $stmt = $db->prepare($sql);
+        $enterData = $stmt->execute();
+}
 
     ?>
 
@@ -218,6 +236,57 @@ if (isset($_POST["report_submit"])) {
         </fieldset>     
     </form>
    
+
+
+
+<form action="<? print $_SERVER['PHP_SELF']; ?>"
+                      method="post"
+                      id="user_select">
+<fieldset class="listbox"><legend>User</legend>
+    <select name="lstUser" size="1" tabindex="243">';
+                    <?php foreach ($users as $user) {
+                    print '<option value=' . $user['pkEmail'] . '>'.$user['pkEmail'].'</option>';
+                    }?>
+    </select>
+    <input type="submit" id="user_submit" name="user_submit" value="Submit" tabindex="502" class="button">
+</fieldset>
+</form>
+
+<form action="<? print $_SERVER['PHP_SELF']; ?>"
+                      method="post"
+                      id="report_select">
+<fieldset class="listbox"><legend>Report</legend>
+        <select name="lstReport" size="1" tabindex="243">';
+                    <?php foreach ($reports as $report) {
+                    print '<option value=' . $report['pkReportID'] . '>'.$report['fkEmail']. " " . $report['pkReportID'].'</option>';
+                    }?>
+        </select>
+        <input type="submit" id="report_submit" name="report_submit" value="Submit" tabindex="502" class="button">
+</fieldset>
+<form>
+
+<form action="<? print $_SERVER['PHP_SELF']; ?>" method="post">
+        <fieldset>
+                    <h1 id="firstHeading" class="firstHeading">Report</h1>
+                    <form id="reportForm">
+                    <b>User:   </b><input type="text" name="rep_email"<? print 'value="'.$rep_email.'"'; ?>/><br>
+                    <b>Report ID:   </b><input type="text" name="rep_id"<? print 'value="' .$rep_ID . '"'; ?>/><br>
+                    <b>Date:   </b><input type="text" name="datepicker" <? print 'value="'.$rep_date.'"'; ?>/><br>
+                    <b>Time:   </b><input type="text" name="timepicker"<? print 'value="'.$rep_time.'"'; ?>/><br>
+                    <b>Fish:   </b><select name ="fish"><? print '<option value=' . $rep_fishID. '>'.$rep_fish. '</option>'; ?>/>
+                    <?php foreach ($fishes as $fish) {
+                    print '<option value=' . $fish['pkFishID'] . '>'.$fish['fldFishSpecies']. '</option>';
+                    }?>
+                    </select><br>
+                    <b>Tide:   </b><select name ="tide"><? print '<option>'.$rep_tide. '</option>'; ?><option>Incoming</option><option>Outgoing</option></select><br>
+                    <b>Shore:  </b><select name ="shore"><? print '<option>'.$rep_shore. '</option>'; ?><option>On Shore</option><option>Off Shore</option></select><br>
+                    <b>Bait:   </b><input type="text"  name ="bait" name="bait" size="10" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_bait.'"'; ?>/><br>
+                    <b>Length: </b><input type="text" name ="length" name="txtLength" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_length.'"'; ?>/> Inches<br>
+                    <b>Weight: </b><input type="text"  name ="weight" name="txtWeight" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33"<? print 'value="'.$rep_weight.'"'; ?>/> Pounds<br>
+                    <input type="submit" value="update" name ="update_report"/>
+                    </form> 
+        </fieldset>
+</form>
 
 <?
 }
@@ -251,51 +320,3 @@ elseif ($_SESSION['user']){
 <? 
 } 
 ?>
-
-<form action="<? print $_SERVER['PHP_SELF']; ?>"
-                      method="post"
-                      id="user_select">
-<fieldset class="listbox"><legend>User</legend>
-    <select name="lstUser" size="1" tabindex="243">';
-                    <?php foreach ($users as $user) {
-                    print '<option value=' . $user['pkEmail'] . '>'.$user['pkEmail'].'</option>';
-                    }?>
-    </select>
-    <input type="submit" id="user_submit" name="user_submit" value="Submit" tabindex="502" class="button">
-</fieldset>
-</form>
-
-<form action="<? print $_SERVER['PHP_SELF']; ?>"
-                      method="post"
-                      id="report_select">
-<fieldset class="listbox"><legend>Report</legend>
-        <select name="lstReport" size="1" tabindex="243">';
-                    <?php foreach ($reports as $report) {
-                    print '<option value=' . $report['pkReportID'] . '>'.$report['fkEmail']. " " . $report['pkReportID'].'</option>';
-                    }?>
-        </select>
-        <input type="submit" id="report_submit" name="report_submit" value="Submit" tabindex="502" class="button">
-</fieldset>
-<form>
-
-<form action="<? print $_SERVER['PHP_SELF']; ?>" method="post">
-        <fieldset>
-                    <h1 id="firstHeading" class="firstHeading">Report</h1>
-                    <form id="reportForm">
-                    <b>User:   </b><input type="text" <? print 'value="'.$rep_email.'"'; ?>/><br>
-                    <b>Date:   </b><input type="text" id="datepicker" <? print 'value="'.$rep_date.'"'; ?>/><br>
-                    <b>Time:   </b><input type="text" id="timepicker"<? print 'value="'.$rep_time.'"'; ?>/><br>
-                    <b>Fish:   </b><select id ="fish"><? print '<option value=' . $rep_fishID. '>'.$rep_fish. '</option>'; ?>/>
-                    <?php foreach ($fishes as $fish) {
-                    print '<option value=' . $fish['pkFishID'] . '>'.$fish['fldFishSpecies']. '</option>';
-                    }?>
-                    </select><br>
-                    <b>Tide:   </b><select id ="tide"><option>Incoming</option><option>Outgoing</option></select><br>
-                    <b>Shore:  </b><select id ="shore"><option>On Shore</option><option>Off Shore</option></select><br>
-                    <b>Bait:   </b><input type="text"  id ="bait" name="bait" size="10" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_bait.'"'; ?>/><br>
-                    <b>Length: </b><input type="text" id ="length" name="txtLength" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33" <? print 'value="'.$rep_length.'"'; ?>/> Inches<br>
-                    <b>Weight: </b><input type="text"  id ="weight" name="txtWeight" size="5" maxlength="20"  onfocus="this.select()"  tabindex="33"<? print 'value="'.$rep_weight.'"'; ?>/> Pounds<br>
-                    <input type="button" value="Save & Close" onclick="saveData()"/>
-                    </form> 
-        </fieldset>
-</form>

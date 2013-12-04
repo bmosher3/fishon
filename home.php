@@ -92,6 +92,16 @@ if (isset($_POST["login"])) {
 		<?
 		include('nav.php');
 		?>
+		<h1>Fish On Rhode Island</h1>
+		<p>Welcome to Fish On, a user submitted fishing report site for fishing in Rhode Island.
+		<p>Go to the fish map page to see all of the user reports.
+		<p>To submit your own report please register and confirm your email address.
+
+		<div id= "fishofmonth">
+			<h2>Fish of the Month</h2>
+			<img src="images/fotm.jpg" alt="big ass fish" width="509" height="679">
+		</div>
+
 		<?php if (!($_SESSION['user'])){ ?>
 		
 	 		<form action="<? print $_SERVER['PHP_SELF']; ?>"
