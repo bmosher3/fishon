@@ -10,7 +10,7 @@ require('connect.php');
             margin: 0 auto 0 auto; 
         }
 </style>
-<title>fishOn</title>
+
 <script src="jquery-ui-timepicker-addon.js"></script>
 <?
   $sql  = 'SELECT pkFishID, fldFishSpecies FROM tblFish ORDER BY fldFishSpecies';
