@@ -46,9 +46,9 @@ if (isset($_POST["submit"])) {
 		 $ehash = password_hash($email,PASSWORD_BCRYPT);
 		 $messageA = '<h1>Thank you for registering for Fish On.</h1>';
          $messageB = "<p>Click this link to confirm your registration: ";
-         $messageB .= '<a href=http://www.uvm.edu/~bmosher/cs148/assignment5.1/confirm.php?q=' . $ehash.'&email='.$email.'>Confirm Registration</a></p>';
+         $messageB .= '<a href=http://www.uvm.edu/~bmosher/cs148/assignment7.1/confirm.php?q=' . $ehash.'&email='.$email.'>Confirm Registration</a></p>';
          $messageB .= "<p>or copy and paste this url into a web browser: ";
-         $messageB .= "http://www.uvm.edu/~bmosher/cs148/assignment5.1/confirm.php?q=" . $ehash. "&email=" . $email;
+         $messageB .= "http://www.uvm.edu/~bmosher/cs148/assignment7.1/confirm.php?q=" . $ehash. "&email=" . $email;
          $subject = "Fish On Registration";
          include_once('mail.php');
          $mailed = sendMail($email, $subject, $messageA . $messageB);
